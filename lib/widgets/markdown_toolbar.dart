@@ -15,6 +15,7 @@ class MarkdownToolbar extends StatelessWidget {
   final Toolbar toolbar;
   final Color? toolbarBackground;
   final Color? expandableBackground;
+  final Color? iconColor;
   final bool showPreviewButton;
   final bool showEmojiSelection;
   final VoidCallback? onActionCompleted;
@@ -30,6 +31,7 @@ class MarkdownToolbar extends StatelessWidget {
     required this.toolbar,
     this.autoCloseAfterSelectEmoji = true,
     this.toolbarBackground,
+    this.iconColor,
     this.expandableBackground,
     this.onActionCompleted,
     this.showPreviewButton = true,
@@ -41,6 +43,8 @@ class MarkdownToolbar extends StatelessWidget {
     return Container(
       color: toolbarBackground ?? Colors.grey[200],
       width: double.maxFinite,
+      decoration: const BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(8))),
       height: 45,
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
@@ -53,19 +57,8 @@ class MarkdownToolbar extends StatelessWidget {
                 icon: FontAwesomeIcons.eye,
                 onPressedButton: onPreviewChanged,
                 tooltip: 'Show/Hide markdown preview',
+                iconColor: iconColor,
               ),
-
-            // Clear the field
-            ToolbarItem(
-              key: const ValueKey<String>("toolbar_clear_action"),
-              icon: FontAwesomeIcons.trashCan,
-              onPressedButton: () {
-                controller.clear();
-                onActionCompleted?.call();
-              },
-              tooltip: 'Clear the text field',
-            ),
-
             // Reset the text field
             ToolbarItem(
               key: const ValueKey<String>("toolbar_reset_action"),
@@ -77,6 +70,7 @@ class MarkdownToolbar extends StatelessWidget {
                 }
               },
               tooltip: 'Reset the text field to specified format',
+              iconColor: iconColor,
             ),
 
             // select single line
@@ -98,6 +92,7 @@ class MarkdownToolbar extends StatelessWidget {
                 toolbar.action("**", "**");
                 onActionCompleted?.call();
               },
+              iconColor: iconColor,
             ),
             // italic
             ToolbarItem(
@@ -108,6 +103,7 @@ class MarkdownToolbar extends StatelessWidget {
                 toolbar.action("_", "_");
                 onActionCompleted?.call();
               },
+              iconColor: iconColor,
             ),
             // strikethrough
             ToolbarItem(
@@ -118,55 +114,9 @@ class MarkdownToolbar extends StatelessWidget {
                 toolbar.action("~~", "~~");
                 onActionCompleted?.call();
               },
+              iconColor: iconColor,
             ),
             // heading
-            ToolbarItem(
-              key: const ValueKey<String>("toolbar_heading_action"),
-              icon: FontAwesomeIcons.heading,
-              isExpandable: true,
-              tooltip: 'Insert Heading',
-              expandableBackground: expandableBackground,
-              items: [
-                ToolbarItem(
-                  key: const ValueKey<String>("h1"),
-                  icon: "H1",
-                  tooltip: 'Insert Heading 1',
-                  onPressedButton: () {
-                    toolbar.action("# ", "");
-                    onActionCompleted?.call();
-                  },
-                ),
-                ToolbarItem(
-                  key: const ValueKey<String>("h2"),
-                  icon: "H2",
-                  tooltip: 'Insert Heading 2',
-                  onPressedButton: () {
-                    toolbar.action("## ", "");
-                    onActionCompleted?.call();
-                  },
-                ),
-                ToolbarItem(
-                  key: const ValueKey<String>("h3"),
-                  icon: "H3",
-                  tooltip: 'Insert Heading 3',
-                  onPressedButton: () {
-                    toolbar.action("### ", "");
-                    onActionCompleted?.call();
-                  },
-                ),
-                ToolbarItem(
-                  key: const ValueKey<String>("h4"),
-                  icon: "H4",
-                  tooltip: 'Insert Heading 4',
-                  onPressedButton: () {
-                    toolbar.action("#### ", "");
-                    onActionCompleted?.call();
-                  },
-                ),
-                // Heading 5 onwards has same font
-              ],
-            ),
-            // unorder list
             ToolbarItem(
               key: const ValueKey<String>("toolbar_unorder_list_action"),
               icon: FontAwesomeIcons.listUl,
@@ -175,33 +125,7 @@ class MarkdownToolbar extends StatelessWidget {
                 toolbar.action("* ", "");
                 onActionCompleted?.call();
               },
-            ),
-            // checkbox list
-            ToolbarItem(
-              key: const ValueKey<String>("toolbar_checkbox_list_action"),
-              icon: FontAwesomeIcons.listCheck,
-              isExpandable: true,
-              expandableBackground: expandableBackground,
-              items: [
-                ToolbarItem(
-                  key: const ValueKey<String>("checkbox"),
-                  icon: FontAwesomeIcons.solidSquareCheck,
-                  tooltip: 'Checked checkbox',
-                  onPressedButton: () {
-                    toolbar.action("- [x] ", "");
-                    onActionCompleted?.call();
-                  },
-                ),
-                ToolbarItem(
-                  key: const ValueKey<String>("uncheckbox"),
-                  icon: FontAwesomeIcons.square,
-                  tooltip: 'Unchecked checkbox',
-                  onPressedButton: () {
-                    toolbar.action("- [ ] ", "");
-                    onActionCompleted?.call();
-                  },
-                )
-              ],
+              iconColor: iconColor,
             ),
             // emoji
             if (showEmojiSelection)
@@ -212,6 +136,7 @@ class MarkdownToolbar extends StatelessWidget {
                 onPressedButton: () async {
                   await _showModalSelectEmoji(context, controller.selection);
                 },
+                iconColor: iconColor,
               ),
             // link
             ToolbarItem(
@@ -228,25 +153,7 @@ class MarkdownToolbar extends StatelessWidget {
 
                 onActionCompleted?.call();
               },
-            ),
-            // image
-            ToolbarItem(
-              key: const ValueKey<String>("toolbar_image_action"),
-              icon: FontAwesomeIcons.image,
-              tooltip: 'Add image',
-              onPressedButton: () async {
-                if (toolbar.hasSelection) {
-                  toolbar.action("![enter image description here](", ")");
-                } else {
-                  await _showModalInputUrl(
-                    context,
-                    "![enter image description here](",
-                    controller.selection,
-                  );
-                }
-
-                onActionCompleted?.call();
-              },
+              iconColor: iconColor,
             ),
             // blockquote
             ToolbarItem(
@@ -257,16 +164,7 @@ class MarkdownToolbar extends StatelessWidget {
                 toolbar.action("> ", "");
                 onActionCompleted?.call();
               },
-            ),
-            // code
-            ToolbarItem(
-              key: const ValueKey<String>("toolbar_code_action"),
-              icon: FontAwesomeIcons.code,
-              tooltip: 'Code syntax/font',
-              onPressedButton: () {
-                toolbar.action("`", "`");
-                onActionCompleted?.call();
-              },
+              iconColor: iconColor,
             ),
             // line
             ToolbarItem(
@@ -277,6 +175,7 @@ class MarkdownToolbar extends StatelessWidget {
                 toolbar.action("\n___\n", "");
                 onActionCompleted?.call();
               },
+              iconColor: iconColor,
             ),
           ],
         ),
@@ -291,7 +190,7 @@ class MarkdownToolbar extends StatelessWidget {
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(
-          top: Radius.circular(30),
+          top: Radius.circular(24),
         ),
       ),
       context: context,
