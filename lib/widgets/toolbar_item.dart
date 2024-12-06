@@ -11,7 +11,6 @@ class ToolbarItem extends StatelessWidget {
     this.isExpandable = false,
     this.items,
     this.expandableBackground,
-    this.iconColor,
   });
 
   final dynamic icon;
@@ -20,7 +19,6 @@ class ToolbarItem extends StatelessWidget {
   final bool isExpandable;
   final List<Widget>? items;
   final Color? expandableBackground;
-  final Color? iconColor;
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +37,10 @@ class ToolbarItem extends StatelessWidget {
                         fontWeight: FontWeight.w900,
                       ),
                     )
-                  : FaIcon(icon, size: 16, color: iconColor),
+                  : FaIcon(
+                      icon,
+                      size: 16,
+                    ),
               tooltip: tooltip,
             ),
           )
@@ -57,7 +58,7 @@ class ToolbarItem extends StatelessWidget {
                             fontWeight: FontWeight.w900,
                           ),
                         )
-                      : FaIcon(icon, size: 16, color: iconColor),
+                      : FaIcon(icon, size: 16,),
                 ),
               ),
               expanded: Container(

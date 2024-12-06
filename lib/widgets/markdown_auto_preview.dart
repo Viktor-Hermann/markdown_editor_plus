@@ -30,7 +30,6 @@ class MarkdownAutoPreview extends StatefulWidget {
     this.expands = false,
     this.decoration = const InputDecoration(isDense: true),
     this.hintText,
-    this.iconColor,
   });
 
   /// Markdown syntax to reset the field to
@@ -136,8 +135,6 @@ class MarkdownAutoPreview extends StatefulWidget {
   ///
   ///
   final Color? toolbarBackground;
-
-  final Color? iconColor;
 
   /// The toolbar widget to display when the toolbar is enabled
   ///
@@ -318,7 +315,6 @@ class _MarkdownAutoPreviewState extends State<MarkdownAutoPreview> {
                   emojiConvert: widget.emojiConvert,
                   toolbarBackground: widget.toolbarBackground,
                   expandableBackground: widget.expandableBackground,
-                  iconColor: widget.iconColor,
                 )
             ],
           );
