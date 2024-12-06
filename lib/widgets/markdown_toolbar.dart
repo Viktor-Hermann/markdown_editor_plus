@@ -15,6 +15,7 @@ class MarkdownToolbar extends StatelessWidget {
   final Toolbar toolbar;
   final Color? toolbarBackground;
   final Color? expandableBackground;
+  final Color? iconColor;
   final bool showPreviewButton;
   final bool showEmojiSelection;
   final VoidCallback? onActionCompleted;
@@ -30,6 +31,7 @@ class MarkdownToolbar extends StatelessWidget {
     required this.toolbar,
     this.autoCloseAfterSelectEmoji = true,
     this.toolbarBackground,
+    this.iconColor,
     this.expandableBackground,
     this.onActionCompleted,
     this.showPreviewButton = true,
@@ -55,6 +57,7 @@ class MarkdownToolbar extends StatelessWidget {
                 icon: FontAwesomeIcons.eye,
                 onPressedButton: onPreviewChanged,
                 tooltip: 'Show/Hide markdown preview',
+                iconColor: iconColor,
               ),
             // Reset the text field
             ToolbarItem(
@@ -67,6 +70,7 @@ class MarkdownToolbar extends StatelessWidget {
                 }
               },
               tooltip: 'Reset the text field to specified format',
+              iconColor: iconColor,
             ),
 
             // select single line
@@ -88,6 +92,7 @@ class MarkdownToolbar extends StatelessWidget {
                 toolbar.action("**", "**");
                 onActionCompleted?.call();
               },
+              iconColor: iconColor,
             ),
             // italic
             ToolbarItem(
@@ -98,6 +103,7 @@ class MarkdownToolbar extends StatelessWidget {
                 toolbar.action("_", "_");
                 onActionCompleted?.call();
               },
+              iconColor: iconColor,
             ),
             // strikethrough
             ToolbarItem(
@@ -108,6 +114,7 @@ class MarkdownToolbar extends StatelessWidget {
                 toolbar.action("~~", "~~");
                 onActionCompleted?.call();
               },
+              iconColor: iconColor,
             ),
             // heading
             ToolbarItem(
@@ -118,6 +125,7 @@ class MarkdownToolbar extends StatelessWidget {
                 toolbar.action("* ", "");
                 onActionCompleted?.call();
               },
+              iconColor: iconColor,
             ),
             // emoji
             if (showEmojiSelection)
@@ -128,6 +136,7 @@ class MarkdownToolbar extends StatelessWidget {
                 onPressedButton: () async {
                   await _showModalSelectEmoji(context, controller.selection);
                 },
+                iconColor: iconColor,
               ),
             // link
             ToolbarItem(
@@ -144,6 +153,7 @@ class MarkdownToolbar extends StatelessWidget {
 
                 onActionCompleted?.call();
               },
+              iconColor: iconColor,
             ),
             // blockquote
             ToolbarItem(
@@ -154,6 +164,7 @@ class MarkdownToolbar extends StatelessWidget {
                 toolbar.action("> ", "");
                 onActionCompleted?.call();
               },
+              iconColor: iconColor,
             ),
             // line
             ToolbarItem(
@@ -164,6 +175,7 @@ class MarkdownToolbar extends StatelessWidget {
                 toolbar.action("\n___\n", "");
                 onActionCompleted?.call();
               },
+              iconColor: iconColor,
             ),
           ],
         ),
