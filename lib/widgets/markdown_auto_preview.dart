@@ -293,7 +293,6 @@ class _MarkdownAutoPreviewState extends State<MarkdownAutoPreview> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _editor(),
-
               // show toolbar
               if (!widget.readOnly)
                 MarkdownToolbar(

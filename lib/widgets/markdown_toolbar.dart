@@ -40,144 +40,149 @@ class MarkdownToolbar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: toolbarBackground ?? Colors.grey[200],
-      width: double.maxFinite,
-      decoration: const BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(8))),
-      height: 45,
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: [
-            // preview
-            if (showPreviewButton)
+    return ClipRRect(
+      borderRadius: const BorderRadius.all(
+        Radius.circular(8),
+      ),
+      child: Container(
+        color: toolbarBackground ?? Colors.grey[200],
+        width: double.maxFinite,
+        height: 45,
+        margin: const EdgeInsets.only(top: 8),
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: [
+              // preview
+              if (showPreviewButton)
+                ToolbarItem(
+                  key: const ValueKey<String>("toolbar_view_item"),
+                  icon: FontAwesomeIcons.eye,
+                  onPressedButton: onPreviewChanged,
+                  tooltip: 'Show/Hide markdown preview',
+                  iconColor: iconColor,
+                ),
+              // Reset the text field
               ToolbarItem(
-                key: const ValueKey<String>("toolbar_view_item"),
-                icon: FontAwesomeIcons.eye,
-                onPressedButton: onPreviewChanged,
-                tooltip: 'Show/Hide markdown preview',
+                key: const ValueKey<String>("toolbar_reset_action"),
+                icon: FontAwesomeIcons.arrowRotateLeft,
+                onPressedButton: () {
+                  if (markdownSyntax != null) {
+                    controller.text = markdownSyntax!;
+                    onActionCompleted?.call();
+                  }
+                },
+                tooltip: 'Reset the text field to specified format',
                 iconColor: iconColor,
               ),
-            // Reset the text field
-            ToolbarItem(
-              key: const ValueKey<String>("toolbar_reset_action"),
-              icon: FontAwesomeIcons.arrowRotateLeft,
-              onPressedButton: () {
-                if (markdownSyntax != null) {
-                  controller.text = markdownSyntax!;
-                  onActionCompleted?.call();
-                }
-              },
-              tooltip: 'Reset the text field to specified format',
-              iconColor: iconColor,
-            ),
 
-            // select single line
-            ToolbarItem(
-              key: const ValueKey<String>("toolbar_selection_action"),
-              icon: FontAwesomeIcons.textWidth,
-              onPressedButton: () {
-                toolbar.selectSingleLine.call();
-                onActionCompleted?.call();
-              },
-              tooltip: 'Select single line',
-            ),
-            // bold
-            ToolbarItem(
-              key: const ValueKey<String>("toolbar_bold_action"),
-              icon: FontAwesomeIcons.bold,
-              tooltip: 'Make text bold',
-              onPressedButton: () {
-                toolbar.action("**", "**");
-                onActionCompleted?.call();
-              },
-              iconColor: iconColor,
-            ),
-            // italic
-            ToolbarItem(
-              key: const ValueKey<String>("toolbar_italic_action"),
-              icon: FontAwesomeIcons.italic,
-              tooltip: 'Make text italic',
-              onPressedButton: () {
-                toolbar.action("_", "_");
-                onActionCompleted?.call();
-              },
-              iconColor: iconColor,
-            ),
-            // strikethrough
-            ToolbarItem(
-              key: const ValueKey<String>("toolbar_strikethrough_action"),
-              icon: FontAwesomeIcons.strikethrough,
-              tooltip: 'Strikethrough',
-              onPressedButton: () {
-                toolbar.action("~~", "~~");
-                onActionCompleted?.call();
-              },
-              iconColor: iconColor,
-            ),
-            // heading
-            ToolbarItem(
-              key: const ValueKey<String>("toolbar_unorder_list_action"),
-              icon: FontAwesomeIcons.listUl,
-              tooltip: 'Unordered list',
-              onPressedButton: () {
-                toolbar.action("* ", "");
-                onActionCompleted?.call();
-              },
-              iconColor: iconColor,
-            ),
-            // emoji
-            if (showEmojiSelection)
+              // select single line
               ToolbarItem(
-                key: const ValueKey<String>("toolbar_emoji_action"),
-                icon: FontAwesomeIcons.faceSmile,
-                tooltip: 'Select emoji',
-                onPressedButton: () async {
-                  await _showModalSelectEmoji(context, controller.selection);
+                key: const ValueKey<String>("toolbar_selection_action"),
+                icon: FontAwesomeIcons.textWidth,
+                onPressedButton: () {
+                  toolbar.selectSingleLine.call();
+                  onActionCompleted?.call();
+                },
+                tooltip: 'Select single line',
+                iconColor: iconColor,
+              ),
+              // bold
+              ToolbarItem(
+                key: const ValueKey<String>("toolbar_bold_action"),
+                icon: FontAwesomeIcons.bold,
+                tooltip: 'Make text bold',
+                onPressedButton: () {
+                  toolbar.action("**", "**");
+                  onActionCompleted?.call();
                 },
                 iconColor: iconColor,
               ),
-            // link
-            ToolbarItem(
-              key: const ValueKey<String>("toolbar_link_action"),
-              icon: FontAwesomeIcons.link,
-              tooltip: 'Add hyperlink',
-              onPressedButton: () async {
-                if (toolbar.hasSelection) {
-                  toolbar.action("[enter link description here](", ")");
-                } else {
-                  await _showModalInputUrl(context,
-                      "[enter link description here](", controller.selection);
-                }
+              // italic
+              ToolbarItem(
+                key: const ValueKey<String>("toolbar_italic_action"),
+                icon: FontAwesomeIcons.italic,
+                tooltip: 'Make text italic',
+                onPressedButton: () {
+                  toolbar.action("_", "_");
+                  onActionCompleted?.call();
+                },
+                iconColor: iconColor,
+              ),
+              // strikethrough
+              ToolbarItem(
+                key: const ValueKey<String>("toolbar_strikethrough_action"),
+                icon: FontAwesomeIcons.strikethrough,
+                tooltip: 'Strikethrough',
+                onPressedButton: () {
+                  toolbar.action("~~", "~~");
+                  onActionCompleted?.call();
+                },
+                iconColor: iconColor,
+              ),
+              // heading
+              ToolbarItem(
+                key: const ValueKey<String>("toolbar_unorder_list_action"),
+                icon: FontAwesomeIcons.listUl,
+                tooltip: 'Unordered list',
+                onPressedButton: () {
+                  toolbar.action("* ", "");
+                  onActionCompleted?.call();
+                },
+                iconColor: iconColor,
+              ),
+              // emoji
+              if (showEmojiSelection)
+                ToolbarItem(
+                  key: const ValueKey<String>("toolbar_emoji_action"),
+                  icon: FontAwesomeIcons.faceSmile,
+                  tooltip: 'Select emoji',
+                  onPressedButton: () async {
+                    await _showModalSelectEmoji(context, controller.selection);
+                  },
+                  iconColor: iconColor,
+                ),
+              // link
+              ToolbarItem(
+                key: const ValueKey<String>("toolbar_link_action"),
+                icon: FontAwesomeIcons.link,
+                tooltip: 'Add hyperlink',
+                onPressedButton: () async {
+                  if (toolbar.hasSelection) {
+                    toolbar.action("[enter link description here](", ")");
+                  } else {
+                    await _showModalInputUrl(context,
+                        "[enter link description here](", controller.selection);
+                  }
 
-                onActionCompleted?.call();
-              },
-              iconColor: iconColor,
-            ),
-            // blockquote
-            ToolbarItem(
-              key: const ValueKey<String>("toolbar_blockquote_action"),
-              icon: FontAwesomeIcons.quoteLeft,
-              tooltip: 'Blockquote',
-              onPressedButton: () {
-                toolbar.action("> ", "");
-                onActionCompleted?.call();
-              },
-              iconColor: iconColor,
-            ),
-            // line
-            ToolbarItem(
-              key: const ValueKey<String>("toolbar_line_action"),
-              icon: FontAwesomeIcons.rulerHorizontal,
-              tooltip: 'Add line',
-              onPressedButton: () {
-                toolbar.action("\n___\n", "");
-                onActionCompleted?.call();
-              },
-              iconColor: iconColor,
-            ),
-          ],
+                  onActionCompleted?.call();
+                },
+                iconColor: iconColor,
+              ),
+              // blockquote
+              ToolbarItem(
+                key: const ValueKey<String>("toolbar_blockquote_action"),
+                icon: FontAwesomeIcons.quoteLeft,
+                tooltip: 'Blockquote',
+                onPressedButton: () {
+                  toolbar.action("> ", "");
+                  onActionCompleted?.call();
+                },
+                iconColor: iconColor,
+              ),
+              // line
+              ToolbarItem(
+                key: const ValueKey<String>("toolbar_line_action"),
+                icon: FontAwesomeIcons.rulerHorizontal,
+                tooltip: 'Add line',
+                onPressedButton: () {
+                  toolbar.action("\n___\n", "");
+                  onActionCompleted?.call();
+                },
+                iconColor: iconColor,
+              ),
+            ],
+          ),
         ),
       ),
     );
